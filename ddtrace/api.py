@@ -1,11 +1,10 @@
 # stdlib
 import logging
 import time
-import ddtrace
 
 # project
 from .encoding import get_encoder, JSONEncoder
-from .compat import httplib, PYTHON_VERSION, PYTHON_INTERPRETER
+from .compat import httplib
 
 
 log = logging.getLogger(__name__)
@@ -26,13 +25,7 @@ class API(object):
 
         # overwrite the Content-type with the one chosen in the Encoder
         self._headers = headers or {}
-        self._headers.update({
-            'Content-Type': self._encoder.content_type,
-            'Datadog-Meta-Lang': 'python',
-            'Datadog-Meta-Lang-Version': PYTHON_VERSION,
-            'Datadog-Meta-Lang-Interpreter': PYTHON_INTERPRETER,
-            'Datadog-Meta-Tracer-Version': ddtrace.__version__,
-        })
+        self._headers.update({'Content-Type': self._encoder.content_type})
 
     def _downgrade(self):
         """
